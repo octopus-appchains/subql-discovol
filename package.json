@@ -1,0 +1,34 @@
+{
+  "name": "subql-discovol",
+  "version": "0.0.4",
+  "description": "This project can be use as a starting po...",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "rm -rf dist && npm build",
+    "test": "jest",
+    "codegen": "./node_modules/.bin/subql codegen"
+  },
+  "homepage": "https://github.com/subquery/subql-starter",
+  "repository": "github:subquery/subql-starter",
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "Octopus Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@polkadot/api": "^7.15.1",
+    "@polkadot/types": "^7.15.1",
+    "@subql/cli": "latest",
+    "@subql/types": "latest",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "resolutions": {
+    "ipfs-unixfs": "6.0.6"
+  }
+}
