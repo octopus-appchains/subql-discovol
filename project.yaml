@@ -1,8 +1,15 @@
-specVersion: 0.2.0
+specVersion: 1.0.0
 name: subql-discovol
-version: 0.0.4
+version: 1.0.0
+runner:
+  node:
+    name: "@subql/node"
+    version: ">=1.13.3"
+  query:
+    name: "@subql/query"
+    version: "*"
 description: This project can be use as a starting po...
-repository: https://github.com/octopus-appchains/subql-discovol.git
+repository: https://github.com/octopus-appchains/subql-atocha.git
 schema:
   file: ./schema.graphql
 network:

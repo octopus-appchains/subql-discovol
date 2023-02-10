@@ -59,7 +59,12 @@ type Call @entity {
 
 type Account @entity {
   id: ID!
-  timestamp: Date!
+  createdAt: Date!
+  nonce: Int @index
+  freeBalance: BigInt
+  reservedBalance: BigInt
+  miscFrozenBalance: BigInt
+  feeFrozenBalance: BigInt
 
   extrinsics: [Extrinsic] @derivedFrom(field: "signer")
   calls: [Call] @derivedFrom(field: "signer")
@@ -74,6 +79,77 @@ type SystemTokenTransfer @entity {
   from: Account @index
   to: Account @index
   amount: BigInt @index
+  timestamp: Date @index
+  extrinsic: Extrinsic
+}
+
+type UpwardMessage @entity {
+  id: ID!
+  sequence: Int @index
+
+  payloadType: String @index
+  payload: String
+  timestamp: Date @index
+  block: Block
+}
+
+type BridgeMessageEvent @entity {
+  id: ID!
+  sequence: Int @index
+
+  eventType: String @index
+  timestamp: Date @index
+  block: Block
+
+  eraEvents: [EraEvent] @derivedFrom(field: "bridgeMessageEvent")
+  appchainToNearTransfers: [AppchainToNearTransfer]
+    @derivedFrom(field: "bridgeMessageEvent")
+}
+
+type LastBridgeMessageEventSequence @entity {
+  id: ID!
+  sequence: Int @index
+}
+
+type EraEvent @entity {
+  id: ID!
+  sequence: Int @index
+  bridgeMessageEvent: BridgeMessageEvent
+
+  eventType: String @index
+  eraIndex: Int @index
+  timestamp: Date @index
+  block: Block
+}
+
+type AppchainToNearTransfer @entity {
+  id: ID!
+  sequence: Int @index
+  bridgeMessageEvent: BridgeMessageEvent
+
+  sender: Account @index
+  receiver: String @index
+  type: String @index
+  assetId: Int @index
+  amount: BigInt @index
+  collection: BigInt @index
+  item: BigInt
+  fee: BigInt
+  timestamp: Date @index
+  extrinsic: Extrinsic
+}
+
+type NearToAppchainTransfer @entity {
+  id: ID!
+  sequence: Int @index
+
+  sender: String @index
+  receiver: Account @index
+  type: String @index
+  assetId: Int @index
+  amount: BigInt @index
+  collection: BigInt @index
+  item: BigInt @index
   timestamp: Date @index
   extrinsic: Extrinsic
 }
