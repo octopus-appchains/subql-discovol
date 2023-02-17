@@ -3,11 +3,11 @@ name: subql-discovol
 version: 1.0.0
 runner:
   node:
-    name: "@subql/node"
-    version: ">=1.13.3"
+    name: '@subql/node'
+    version: '>=1.13.3'
   query:
-    name: "@subql/query"
-    version: "*"
+    name: '@subql/query'
+    version: '*'
 description: This project can be use as a starting po...
 repository: https://github.com/octopus-appchains/subql-atocha.git
 schema:
@@ -15,12 +15,100 @@ schema:
 network:
   endpoint: >-
     wss://gateway.mainnet.octopus.network/discovol/afpft46l1egfhrv8at5pfyrld03zseo1
-  genesisHash: "0x2dfbcf7700297bd8ce07a4665ab39e2ed1a3790df783b936988c85eb87e38bee"
+  genesisHash: '0x2dfbcf7700297bd8ce07a4665ab39e2ed1a3790df783b936988c85eb87e38bee'
 dataSources:
   - kind: substrate/Runtime
     startBlock: 1
     mapping:
       file: ./dist/index.js
       handlers:
-        - handler: handleBlock
-          kind: substrate/BlockHandler
+        - handler: handleTransfer
+          kind: substrate/EventHandler
+          filter:
+            module: balances
+            method: Transfer
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusLpos
+            method: PlanNewEra
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusLpos
+            method: EraPayout
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusAppchain
+            method: Locked
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusAppchain
+            method: AssetBurned
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusAppchain
+            method: NftLocked
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: Locked
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: Nep141Burned
+        - handler: handleAppchainToNearAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: NonfungibleLocked
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: Unlocked
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: Nep141Minted
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: NonfungibleUnlocked
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: AssetMintFailed
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: AssetMinted
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: UnlockFailed
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: NftUnlockFailed
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: NftUnlocked
+        - handler: handleNearToAppchainAccount
+          kind: substrate/EventHandler
+          filter:
+            module: octopusBridge
+            method: UnlockNonfungibleFailed
