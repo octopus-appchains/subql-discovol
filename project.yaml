@@ -22,6 +22,8 @@ dataSources:
     mapping:
       file: ./dist/index.js
       handlers:
+        - handler: handleBlock
+          kind: substrate/BlockHandler
         - handler: handleTransfer
           kind: substrate/EventHandler
           filter:

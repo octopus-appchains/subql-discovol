@@ -6,6 +6,7 @@ import {
   LastBridgeMessageEventSequence,
 } from '../types'
 import { config } from '../config'
+import { handleExtrinsic } from './handleExtrinsic'
 
 export async function handleAppchainToNearAccount(
   _event: SubstrateEvent
@@ -19,15 +20,17 @@ export async function handleAppchainToNearAccount(
     msgSq = new LastBridgeMessageEventSequence('last')
     msgSq.sequence = config.bridgeMessageStartAt.sequence
   }
-  await msgSq.save()
-
   const { sequence } = msgSq
   const newMsg = new BridgeMessageEvent(sequence.toString())
   newMsg.sequence = sequence
   newMsg.eventType = evt.method
   newMsg.blockId = block.block.header.hash.toString()
   newMsg.timestamp = block.timestamp
-  await newMsg.save()
+  await Promise.all([
+    msgSq.save(),
+    newMsg.save(),
+    handleExtrinsic(extrinsic, block),
+  ])
 
   if (
     section === 'octopusLpos' &&

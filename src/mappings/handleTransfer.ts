@@ -2,6 +2,7 @@ import { SubstrateEvent } from '@subql/types'
 import { AccountId, Balance } from '@polkadot/types/interfaces/runtime'
 import { Account, SystemTokenTransfer } from '../types'
 import { syncAccount, createAccount } from './accounts'
+import { handleExtrinsic } from './handleExtrinsic'
 
 async function checkAccount(accountId: string, timestamp: Date) {
   const existedAccount = await Account.get(accountId)
@@ -29,9 +30,6 @@ export async function handleTransfer(event: SubstrateEvent): Promise<void> {
   const to = (to_origin as AccountId).toString()
   const amount = (amount_origin as Balance).toBigInt()
 
-  await checkAccount(from, block.timestamp)
-  await checkAccount(to, block.timestamp)
-
   const record = new SystemTokenTransfer(
     `${block.block.header.number.toString()}-${extrinsic.idx}`
   )
@@ -40,5 +38,10 @@ export async function handleTransfer(event: SubstrateEvent): Promise<void> {
   record.amount = amount
   record.timestamp = block.timestamp
   record.extrinsicId = extrinsic.extrinsic.hash.toString()
-  await record.save()
+  await Promise.all([
+    checkAccount(from, block.timestamp),
+    checkAccount(to, block.timestamp),
+    handleExtrinsic(extrinsic, block),
+    record.save(),
+  ])
 }

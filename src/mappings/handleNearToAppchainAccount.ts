@@ -1,5 +1,6 @@
 import { SubstrateEvent } from '@subql/types'
 import { NearToAppchainTransfer } from '../types'
+import { handleExtrinsic } from './handleExtrinsic'
 
 export async function handleNearToAppchainAccount(_event: SubstrateEvent) {
   const { event: evt, block, extrinsic } = _event
@@ -56,5 +57,5 @@ export async function handleNearToAppchainAccount(_event: SubstrateEvent) {
   }
   record.timestamp = block.timestamp
   record.extrinsicId = `${block.block.header.number}-${extrinsic.idx}`
-  return record
+  await Promise.all([record.save(), handleExtrinsic(extrinsic, block)])
 }
