@@ -5,6 +5,9 @@ export async function handleExtrinsic(
   extrinsic: SubstrateExtrinsic,
   block: SubstrateBlock
 ) {
+  if (!extrinsic) {
+    return
+  }
   const extrinsicId = `${block.block.header.number}-${extrinsic.idx}`
   const record = new Extrinsic(extrinsicId)
   record.hash = extrinsic.extrinsic.hash.toString()
